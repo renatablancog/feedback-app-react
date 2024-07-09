@@ -1,17 +1,17 @@
 {
   "feedback": [
     {
-      "id": 1,
-      "rating": 10,
-      "text": "This is item 1 from the backend"
+      "text": "This is item 1 from the backend EDITED",
+      "rating": 8,
+      "id": "1"
     },
     {
-      "id": 2,
+      "id": "2",
       "rating": 8,
       "text": "This is item 2 from the backend"
     },
     {
-      "id": 3,
+      "id": "3",
       "rating": 7,
       "text": "This is item 3 from the backend"
     }

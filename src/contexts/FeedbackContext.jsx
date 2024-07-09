@@ -1,5 +1,4 @@
 import { createContext, useState, useEffect } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 import React from 'react';
 
 const FeedbackContext = createContext();
@@ -15,9 +14,7 @@ export const FeedbackProvider = ({ children }) => {
 
   //Fetch data
   const fetchFeedback = async () => {
-    const response = await fetch(
-      `http://localhost:5000/feedback?_sort=id&_order=desc`
-    );
+    const response = await fetch(`/feedback?_sort=id&_order=desc`);
     const data = await response.json();
 
     setFeedback(data);
@@ -25,10 +22,19 @@ export const FeedbackProvider = ({ children }) => {
   };
 
   //Add
-  const addFeedback = (newFeedback) => {
-    newFeedback.id = uuidv4();
+  const addFeedback = async (newFeedback) => {
     // console.log(newFeedback);
-    setFeedback([newFeedback, ...feedback]);
+    const response = await fetch('/feedback', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newFeedback),
+    });
+
+    const data = await response.json();
+    console.log(data);
+    setFeedback([data, ...feedback]);
   };
 
   //Edit
@@ -37,17 +43,28 @@ export const FeedbackProvider = ({ children }) => {
   };
 
   //Update
-  const updateFeedback = (id, updatedItem) => {
+  const updateFeedback = async (id, updatedItem) => {
+    const response = await fetch(`/feedback/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(updatedItem),
+    });
+
+    const data = await response.json();
+
     setFeedback(
-      feedback.map((item) =>
-        item.id === id ? { ...item, ...updatedItem } : item
-      )
+      feedback.map((item) => (item.id === id ? { ...item, ...data } : item))
     );
   };
 
   //Delete
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete?')) {
+      await fetch(`/feedback/${id}`, {
+        method: 'DELETE',
+      });
       setFeedback(feedback.filter((element) => element.id !== id));
     }
   };
